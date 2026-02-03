@@ -109,7 +109,7 @@
         }
       ]
     },
-    "nationality": {
+    "nationalities": {
       "$ref": "#/$defs/nationalities",
       "description": "Array of ISO 3166-1 alpha-2 nationality codes. Note: Entire array is disclosed atomically in mdoc (no selective disclosure of individual nationalities).",
       "examples": [["DE", "FR"]]
@@ -235,7 +235,7 @@
     "given_name",
     "birth_date",
     "place_of_birth",
-    "nationality",
+    "nationalities",
     "expiry_date",
     "issuing_authority",
     "issuing_country"

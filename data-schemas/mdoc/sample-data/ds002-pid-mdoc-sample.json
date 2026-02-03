@@ -8,7 +8,7 @@
     "country": "FR",
     "locality": "Paris"
   },
-  "nationality": ["FR"],
+  "nationalities": ["FR"],
   "resident_address": "123 Via Appia, 00100 Rome, Italy",
   "resident_country": "IT",
   "resident_state": "Lazio",
