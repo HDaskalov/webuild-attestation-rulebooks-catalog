@@ -121,7 +121,6 @@ All data identifiers and definitions in this chapter are independent of any enco
 | **Data Identifier**  | **Definition**                                                                                                                                                                                                                                                                                              |
 |----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | location_status      | The location of validity status information on the EBWOID used for revocation/suspension checks.                                                                                                                                                                                                            |
-| expiry_date          | Administrave Date when the EBWOID will expire, following ISO 8601 **Clarification** This is in case the administrative validity is different from the technical expiry date of the credential.                                                                                                              |
 | trust_anchor         | This meta-data attribute indicates at least the URL at which a machine‑readable version of the trust anchor to be used for verifying the EBW‑OID can be found or looked up. This corresponds to Annex V/VII point h) of the [European Digital Identity Regulation] and EBW Article 8 issuance as EAA/QEAA.  |
 
 
@@ -144,37 +143,18 @@ Claim names and disclosure policy (aligned with Chapter 2 attributes):
 |-----------------------------|-----------------------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | id                          | id                          | string          | Cross‑border unique identifier per EBW Article 9. In **WEBUILD** EUID where available, otherwise a similar constructed, unique per issuer identifier. <Countrycode ISO 3166-1 alpha-2><Issuer-reference>.<unique identificator> `SE` +  `BOLREG` + `123456789` -> `SEBOLREG.123456789`  |
 | name                        | name                        | string          | Official name from relevant register or official record.                                                                                                                                                                                                                                |
-| attestation_legal_category  | attestation_legal_category  | string          | The type of attestation category. Can be one of QEAA or PUB-EAA                                                                                                                                                                                                                         | 
-| expiry_date                 | date_of_expiry              | string          | Addministrative expiry date given on ISO 8601-1  date fomat. YYYY‑MM‑DD ]                                                                                                                                                                                                               |
+| attestation_legal_category  | attestation_legal_category  | string          | The type of attestation category. Can be one of QEAA or PUB-EAA                                                                                                                                                                                                                         |
 | issuing_authority           | issuing_authority           | string          | Name of the administrative authority, Commission (for Union entities), or QTSP issuing the EAA/QEAA; or ISO 3166‑1 alpha‑2 where applicable.                                                                                                                                            |
 | issuing_country             | issuing_country             | string          | ISO 3166‑1 alpha‑2 code of the provider’s country/territory.                                                                                                                                                                                                                            |
-| location_status             | status                      | JSON Object     | See [Section 3.2.1](#321-attribute-status).                                                                                                                                                                                                                                             |
+| location_status             | status                      | JSON Object     | TODO: See [Section 3.2.1](#321-attribute-status). Pending architecture group decision.                                                                                                                                                                                                  |
 | trust_anchor                | trust_anchor                | string (URI)    | URL of machine‑readable trust anchor as per Annex V/VII point h).                                                                                                                                                                                                                       |
 
 Selective Disclosure: Attributes of the EBWOID SHALL NOT be selectively disclosable.
 
 
 ### 3.2.1 Attribute status
-For SD‑JWT VC‑compliant EBW‑OID, the EBW‑OID MUST include a status claim if the technical validity period is greater than 24 hours. This claim enables Relying Parties to determine if a credential has been revoked via a status list mechanism, as specified in [SD‑JWT VC](https://datatracker.ietf.org/doc/draft-ietf-oauth-sd-jwt-vc/12/).
 
-The status claim SHALL be a JSON object with the following members:
-
-* 'type' (string): SHALL be "status-list".
-* 'status_list_credential' (string, URI): The URI of the Status List Credential document that contains the status bitstring.
-* 'status_list_index' (integer, >= 0): The zero-based index into the status list bitstring that corresponds to this credential.
-* 'status_purpose' (string): SHALL be "revocation" for this PID.
-
-Example:
-```json
-{
-  "status": {
-    "type": "status-list",
-    "status_list_credential": "https://issuer.example.com/status/1",
-    "status_list_index": 42,
-    "status_purpose": "revocation"
-  }
-}
-```
+TODO: This subsection is pending decisions by the PID/EBWOID group task 5 on revocation and the architecture group. No specific revocation mechanism is prescribed until an ADR is adopted.
 
 ### 3.3 Example
 
@@ -188,14 +168,7 @@ Illustrative examples:
   "attestation_legal_category": "PUB-EAA",
   "issuing_authority": "Brønnøysundregistrene",
   "issuing_country": "NO",
-  "date_of_expiry": "2026-12-31",
   "trust_anchor": "https://tl.eidas.europa.eu/tl-browser/#/",
-  "status": {
-    "type": "status-list",
-    "status_list_credential": "https://issuer.example.no/status/1",
-    "status_list_index": 42,
-    "status_purpose": "revocation"
-  },
   "cnf": {
     "jwk": {
         "kty": "EC",
@@ -266,16 +239,6 @@ Issuers MAY use intermediate signing certificates. RPs SHALL handle such chains.
 ## 6 Revocation
 
 TODO: WE BUILD WP4 - EBW owner identification data revocation task 5
-
-EBW‑OID is expected to be long‑lived but revocable. This Rulebook adopts the following policy:
-- EBW‑OID SHALL include `exp`. Validity longer than 24 hours is permitted; therefore, revocation MUST be supported.
-- When the Commission specifies the Attestation Status List (ASL) or Attestation Revocation List (ARL) mechanism, EBW‑OID Providers SHALL implement that mechanism.
-- Until such mechanisms are specified, EBW‑OID Providers SHALL publish revocation status via a machine‑readable endpoint referenced from the issuer’s policy, and Relying Parties SHALL implement status checking per that policy. Issuers SHOULD implement the [oauth status list](https://datatracker.ietf.org/doc/draft-ietf-oauth-status-list/) until otherwise specified. 
-
-Relying Party checks:
-- Validate `exp` not in the past.
-- Query the designated ASL/ARL (or interim status endpoints) to determine the current status.
-- Treat any indeterminate status as non‑valid per risk policy.
 
 
 ## 7 Compliance
