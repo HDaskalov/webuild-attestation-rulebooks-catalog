@@ -266,6 +266,11 @@
         "DE-BY"
       ]
     },
+    "attestation_legal_category": {
+      "type": "string",
+      "const": "PUB-EAA",
+      "description": "Indication of the attestation legal category, one of QEAA, PUB-EAA or EAA. as required by  ARB_25 in Topic 12 of Annex 2 of the ARF."
+    },
     "trust_anchor": {
       "type": "string",
       "format": "uri",
@@ -453,6 +458,7 @@
     "birthdate",
     "place_of_birth",
     "nationalities",
+    "attestation_legal_category",
     "date_of_expiry",
     "issuing_authority",
     "issuing_country",
